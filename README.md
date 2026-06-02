@@ -26,7 +26,8 @@ You can install the package and dependencies using:
 ```r
 # Install dependencies
 install.packages(c("Seurat", "Polychrome", "stringdist", "stringr",
-                   "ggplot2", "cowplot", "igraph", "openxlsx"))
+                   "ggplot2", "cowplot", "igraph", "openxlsx",
+                   "reshape2", "viridis", "fields"))
 
 if (!require(devtools)) {
   install.packages("devtools")
