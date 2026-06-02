@@ -64,7 +64,10 @@ Here is a description of the basic arguments it requires:
 1. scObject: Seurat object, input seurat object in which tag expression matrix is merged in gene expression matrix
 2. groupby: character, a column name in meta data of the Seurat object, used for set definition
 3. share_method: min,max,mean, method to compute connection strength between different sets
-4. direction: True or False, whether or not to distinguish tag-sender or tag-receiver
+4. highconfidence: TorF, if or not to distinguish high confident tag-sender
+5. send_cutoff1: int, count cutoff for primary celltag asignment
+6. send_cutoff2: numeric, percentage cutoff for primary celltag asignment
+7. direction: True or False, whether or not to distinguish tag-sender or tag-receiver
 
 We have everything we need in our input object to fill these arguments:
 ```r
