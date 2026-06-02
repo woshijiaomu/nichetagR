@@ -1,0 +1,37 @@
+Package: nichetagR
+Type: Package
+Title: NicheTagR for niche-niche network construction
+Version: 0.1.0
+Authors@R: c(
+    person(given = "Dekang",
+           family = "Lv",
+           role = c("cre","aut"),
+           email = "dekanglv@126.com",
+           comment = c(ORCID = "0000-0002-0026-1126")),
+    person(given = "Suyang",
+           family = "Xuan",
+           role = c("aut","ctb"),
+           email = "syxuan@gmail.com"),
+    person(given = "Bin",
+           family = "He",
+           role = "ctb",
+           email = "binhe@gmail.com")
+           )
+URL: https://github.com/woshijiaomu/nichetagR
+BugReports: https://github.com/woshijiaomu/nichetagR/issues
+Description: nichetagR is resource that leverages connectome data generated from MOSAIC method to construct niche-niche network.
+Imports: Polychrome, SeuratObject, cowplot, ggplot2, igraph, openxlsx,
+        reshape2, scales, stringdist, stringr, Seurat, viridis, fields
+License: Apache License (== 2.0) | file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+NeedsCompilation: no
+Packaged: 2026-06-02 13:04:30 UTC; dklv
+Author: Dekang Lv [cre, aut] (ORCID: <https://orcid.org/0000-0002-0026-1126>),
+  Suyang Xuan [aut, ctb],
+  Bin He [ctb]
+Maintainer: Dekang Lv <dekanglv@126.com>
+Depends: R (>= 3.5.0)
