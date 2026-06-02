@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Dekang Lv" />
+
+
+<title>basic-usage</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">basic-usage</h1>
+<h4 class="author">Dekang Lv</h4>
+<h4 class="date">May 2025</h4>
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>Thank you for your interest in the <em>nichetagR</em> approach. This vignette describes how to apply the package to your intercellular RNA-barcode delivery experiment(Multiplexed Oligonucleotide Spatial Ancestry Interaction Coding, MOSAIC). MOSAIC utilizes conditionally expressed, proximally transmissible sLP-mCherry-MCP-MS2-CellTag barcodes to trace the spatiotemporal lineages and communicating networks within intact tissues at single-cell resolution. The goal of the <em>nichetagR</em> package is to use CellTag labels from single-cell transcriptomics data to reconstruct the lineage and spatial proximity relationships of mCherry-positive cells. To learn more about this type of experiments and details about the nichetagR approach, please consult <a href="insert%20paper%20URL%20here">Bin et al, 2025</a>. This vignette aims at explaining how to apply a basic <em>nichetagR</em> analysis.</p>
+<p>This vignette will cover:</p>
+<ol style="list-style-type: decimal">
+<li>Package installation</li>
+<li>Setting up your input data</li>
+<li>Running the nichetagR computational pipeline</li>
+<li>Conclusion and information about the R session</li>
+</ol>
+</div>
+<div id="package-installation" class="section level1">
+<h1>Package installation</h1>
+<p>You can install the package from github using</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="co">#Install dependencies</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">install.packages</span>(<span class="kw">c</span>(<span class="st">&quot;Seurat&quot;</span>,<span class="st">&quot;Polychrome&quot;</span>,<span class="st">&quot;stringdist&quot;</span>,<span class="st">&quot;stringr&quot;</span>,<span class="st">&quot;ggplot2&quot;</span>,<span class="st">&quot;cowplot&quot;</span>,<span class="st">&quot;igraph&quot;</span>,<span class="st">&quot;openxlsx&quot;</span>,<span class="st">&quot;reshape2&quot;</span>,<span class="st">&quot;viridis&quot;</span>,<span class="st">&quot;fields&quot;</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="cf">if</span>(<span class="op">!</span><span class="kw">require</span>(devtools)){</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>    <span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>}</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="co">#install nichetagR</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="cf">if</span>(<span class="op">!</span><span class="kw">require</span>(nichetagR)){</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>  devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;woshijiaomu/nichetagR&quot;</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>}</span></code></pre></div>
+</div>
+<div id="setting-up-your-input-data" class="section level1">
+<h1>Setting up your input data</h1>
+<p>Now that the package is installed, we load the package and attach its example data. We also load Seurat that will be used to manipulate Seurat Objects in R.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">library</span>(nichetagR)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">data</span>(example)</span></code></pre></div>
+<p>The example data is a single-cell transcriptome (10XGenomics) which was performed in the mCherry+ cells sorted from early (2-week) metastatic lung tissues 4 days after Dox exposure. In addition to gene expression data, cell classification information and CellTag expression profiles within the object are utilized to identify spatial proximity relationships. In this vignette we will use a temporary directory, but you can use the directory of your choice. That is all we need in terms of inputs! Below is the pre-processsing workflow for obtaining this data:</p>
+<p>1.To enable the detection of exogenous genes and tags, a custom mouse reference genome was generated for Cell Ranger (version 8.0.1). The coding sequences of mCherry, BFP, and all relevant CellTag sequences were appended to the mouse genome FASTA file, and their corresponding gene annotations were added to the GTF file under a new gene category. Using these modified files, a new Cell Ranger reference was built using the “cellranger mkref” command. Raw data were then processed using the cellranger count pipeline, aligning reads to the custom reference genome and generating filtered gene-barcode matrices for downstream analysis.</p>
+<p>2.The matrix data was analyzed using the Seurat package (version 4.0.0), and cell clusters were annotated using the SingleR package (version 2.10.0).</p>
+</div>
+<div id="running-the-nichetagr-computational-pipeline" class="section level1">
+<h1>Running the nichetagR computational pipeline</h1>
+<p>Now that we have our gene expresion data, celltag expression profiles and cell type annotation, we have everything we need to run the pipeline.</p>
+<p>All the pipeline is mainly packaged into a single function, <code>Dnichenetwork()</code>.</p>
+<p>Here is a description of the basic arguments it requires:</p>
+<ol style="list-style-type: decimal">
+<li>scObject: Seurat object, input seurat object in which tag expression matrix is merged in gene expression matrix</li>
+<li>groupby: character, a column name in meta data of the Seurat object, used for set definition</li>
+<li>share_method: min,max,mean, method to calculate connection strength between different sets</li>
+<li>highconfidence TorF, if or not to distinguish high confident tag-sender</li>
+<li>send_cutoff1 int, count cutoff for primary celltag asignment</li>
+<li>send_cutoff2 numeric, percentage cutoff for primary celltag asignment</li>
+<li>direction: True or False, whether or not to distinguish tag-sender or tag-receiver</li>
+</ol>
+<p>We have everything we need in our input object to fill these arguments:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="co">#calculate connectome</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>nnt=<span class="kw">Dnichenetwork</span>(scObject,<span class="dt">groupby=</span><span class="st">&quot;cell_clusters&quot;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="co">#&gt; AGTAATCA AGTAATCA AGTAATCA AGTAATCA TGCAGACA TGCAGACA TGCAGACA TGCAGACA </span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="co">#&gt;     2534     2534     2534     2534     2437     2437     2437     2437 </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="co">#&gt; TGCAGACA TGCAGACA TGCAGACA TGCAGACA TGCAGACA AACACAAG AACACAAG TAAGAGTT </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="co">#&gt;     2437     2437     2437     2437     2437     1368     1368     1163 </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="co">#&gt; TAAGAGTT TAAGAGTT TAAGAGTT GCGATGAT GCGATGAT GCGATGAT GCGATGAT GCGATGAT </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="co">#&gt;     1163     1163     1163     1110     1110     1110     1110     1110 </span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a><span class="co">#&gt; CGTGCGGT CTGTTTGT CTGTTTGT CCAGCCGA CCAGCCGA TCCCGTAA TCCCGTAA GTCCGAGG </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a><span class="co">#&gt;      988      651      651      649      649      512      512      496 </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a><span class="co">#&gt; GTCCGAGG GTCCGAGG CTGAGCGC CTGAGCGC ATATGGAC ATATGGAC ATATGGAC GGTCCAGG </span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a><span class="co">#&gt;      496      496      455      455      413      413      413      250 </span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a><span class="co">#&gt; GGTCCAGG GGTCCAGG GGAGACTC GGCTCCAG GAGTGTTG TGTGGCCC ACTTTGAG CCCGCGCG </span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a><span class="co">#&gt;      250      250      248      214      209      192      191      176 </span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true"></a><span class="co">#&gt; CCCGCGCG TACGTGGC TACGTGGC CAATTAGA GCCATGAA AGTCTTGA AGTCTTGA ATTGCACC </span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true"></a><span class="co">#&gt;      176      170      170      117      110       93       93       92 </span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true"></a><span class="co">#&gt; AGTACGAA TAAAAATT AAGCTGAA AAGCTGAA TTTGGGAA GTGAGGCA CAACCGGT GGCCAGAC </span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true"></a><span class="co">#&gt;       82       81       78       78       77       74       63       50 </span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true"></a><span class="co">#&gt; TGGAGTCA TGGAGTCA TGGAGTCA GAACATGT CGTAATCT CGTAATCT TTACTGGA GCTGGATC </span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true"></a><span class="co">#&gt;       47       47       47       41       38       38       38       33 </span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true"></a><span class="co">#&gt; GCTGGATC GAATTCGA GAATTCGA GAACGCGT TTTGGATG GCGGAGAT CGCACACA CGCACACA </span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true"></a><span class="co">#&gt;       33       24       24       21       20       19       18       18 </span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true"></a><span class="co">#&gt; CGCACACA CGCACACA CGAATCCA CGAATCCA CGAATCCA CGAATCCA CTAGGTAA CGGTGACA </span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true"></a><span class="co">#&gt;       18       18       16       16       16       16       15       13 </span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true"></a><span class="co">#&gt; AGGAAGTC TGAGTACA TGAGTACA TGAGTACA AATATTTC GGCAGCGT TGCAGCGA TGTAGACA </span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true"></a><span class="co">#&gt;       13       12       12       12        9        6        4        3 </span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true"></a><span class="co">#&gt; TGTAGACA TGTAGACA TGTAGACA TCTGGAGC CGTAATCA CGTAATCA CGTAATCA AGCAATCA </span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true"></a><span class="co">#&gt;        3        3        3        2        2        2        2        2 </span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true"></a><span class="co">#&gt; AGCAATCA TGCGGACA TGCGGACA TGCGGACA AGAAATCC CGACTCTA CGACTCTA CGACTCTA </span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true"></a><span class="co">#&gt;        2        2        2        2        1        1        1        1 </span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true"></a><span class="co">#&gt; CGAATCTA CGAATCTA CTCAGCCA CGCAGACA CGCAGACA CGTCCTCA GCGACGAT ATCTGGGC </span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true"></a><span class="co">#&gt;        1        1        1        1        1        1        1        1 </span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true"></a><span class="co">#&gt; TGCATACA TATGTGGC TAAGAGTG GAATTCGC GAATTCGT CGACTCTC </span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true"></a><span class="co">#&gt;        1        1        1        1        1        1 </span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true"></a><span class="co">#&gt; CGTAATCT CGTAATCA AGCAATCA AGAAATCC TGGAGTCA CGCACACA TGAGTACA TGCAGCGA </span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true"></a><span class="co">#&gt;       38        2        2        1       47       18       12        4 </span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true"></a><span class="co">#&gt; TGTAGACA TGCGGACA CGCAGACA TGCATACA TGCAGATA AAACAATG CGCACAAG TAAAAATT </span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true"></a><span class="co">#&gt;        3        2        1        1        1       37        1       81 </span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true"></a><span class="co">#&gt; TAGGGGTT TAAGAGTG TAAGAATT GCCATGAA GCGGAGAT GCGACGAT GCGAGGAG ACGATGAA </span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true"></a><span class="co">#&gt;        1        1        1      110       19        1        1        1 </span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true"></a><span class="co">#&gt; GTGCTGGT CTGGTTCT TGTTTTGT GCAACCGA CTCAGCCA TTCCGAAA TCCCGTCA GGTCCAGG </span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true"></a><span class="co">#&gt;       39       30        1        1        1        1        1      250 </span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true"></a><span class="co">#&gt; TCCGAGCG CTCCAAGG CTGAGCGT CCAAGCGC ATAGAGAC ATCTGGGC GTATGGGC GGCTCCAG </span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true"></a><span class="co">#&gt;        1        1        8        1       60        1        1      214 </span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true"></a><span class="co">#&gt; GGATCCAG GGTCCAAC GTGAGATC GGATCCAG GTATGTTG AGTGGCCT ACGTTAAG TCCGAGCG </span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true"></a><span class="co">#&gt;      105        1        4      105       51        1        4        1 </span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true"></a><span class="co">#&gt; CTCGCGCG TTACGTGG TATGTGGC GAATTCGA ACGATGAA AGGCTGGA CGTCTTGA GATTGACC </span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true"></a><span class="co">#&gt;        1        9        1       24        1       45        1       51 </span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true"></a><span class="co">#&gt; AATACGAA TAAGAATT AGGCTGGA ACGATGAA TTTGGGAC GTGAAGCA TAACCAGT GGTCCAAC </span></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true"></a><span class="co">#&gt;        1        1       45        1        1        1        1        1 </span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true"></a><span class="co">#&gt; TGAGTACA TGGAAGTA TGTAGACA GAACGCGT CGTAATCA CGAATCTA TTACGTGG GTGAGATC </span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true"></a><span class="co">#&gt;       12        9        3       21        2        1        9        4 </span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true"></a><span class="co">#&gt; TCTGGAGC GAATTCGC GAATTCGT GAATTCGT TTCTGATG GCGACGAT CGCAGACA AGCACCCA </span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true"></a><span class="co">#&gt;        2        1        1        1        1        1        1        1 </span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true"></a><span class="co">#&gt; CGCACAAG TGCATACA CGTAATCA CGACTCTA CGAATCTA CGATTCTA CAAGGTAC CGCAGACA </span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true"></a><span class="co">#&gt;        1        1        2        1        1        1       11        1 </span></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true"></a><span class="co">#&gt; TGGAAGTA TGTAGACA TGCGGACA TGCATACA TATTTTTC TGCAGCGA TGCAGATA TGCGGACA </span></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true"></a><span class="co">#&gt;        9        3        2        1        6        4        1        2 </span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true"></a><span class="co">#&gt; CGCAGACA TGCATACA TGCAGATA ATCTGGGC AGCAATCA CGAATCTA CGTCCTCA AGAAATCC </span></span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true"></a><span class="co">#&gt;        1        1        1        1        2        1        1        1 </span></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true"></a><span class="co">#&gt; AGCACCCA CGCAGACA TGCATACA TGCAGATA GAAATCCT CGAATCTA CGACTCTC CGATTCTA </span></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true"></a><span class="co">#&gt;        1        1        1        1        1        1        1        1 </span></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true"></a><span class="co">#&gt; CGACTCTC CGATTCTA CGCAGACA TGCATACA TGCAGATA CGTCTTGA GCGAGGAG GTATGGGC </span></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true"></a><span class="co">#&gt;        1        1        1        1        1        1        1        1 </span></span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true"></a><span class="co">#&gt; TGCAGATA GTATGGGC TAAGAATT GAATTCGT GAAATCCT CGATTCTA </span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true"></a><span class="co">#&gt;        1        1        1        1        1        1 </span></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true"></a><span class="co">#&gt; AGTAATCA TGCAGACA AACACAAG TAAGAGTT GCGATGAT CGTGCGGT AGGCTCCC CTGTTTGT </span></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true"></a><span class="co">#&gt;     2534     2437     1368     1163     1110      988      965      651 </span></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true"></a><span class="co">#&gt; CCAGCCGA CAGATCAT TCCCGTAA GTCCGAGG ACCGTCGG CTGAGCGC ATATGGAC TTGTTACA </span></span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true"></a><span class="co">#&gt;      649      530      512      496      475      455      413      372 </span></span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true"></a><span class="co">#&gt; GGTTAAAT GGAGACTC GAGTGTTG ATTTTTTG AAGCAGGC TGTGGCCC ACTTTGAG CCCGCGCG </span></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true"></a><span class="co">#&gt;      313      248      209      208      198      192      191      176 </span></span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true"></a><span class="co">#&gt; TACGTGGC GTTAACGG CAATTAGA CCGGAGTC GATTTGTG TAACCGAC GATGGTGG AGTCTTGA </span></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true"></a><span class="co">#&gt;      170      156      117      116      102       97       96       93 </span></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true"></a><span class="co">#&gt; AACAGAGT ATTGCACC GCCTAGGT AGTACGAA AAGCTGAA TTTGGGAA GTGAGGCA TGTAAGGT </span></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true"></a><span class="co">#&gt;       92       92       85       82       78       77       74       64 </span></span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true"></a><span class="co">#&gt; CAACCGGT TTGTAGTT GGCCAGAC GAACATGT TTACTGGA GCTGGATC TCGCGGGT TACAAAGA </span></span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true"></a><span class="co">#&gt;       63       62       50       41       38       33       27       23 </span></span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true"></a><span class="co">#&gt; GGGCCGCC TTTGGATG CGAATCCA CTAGGTAA CGGTGACA AGGAAGTC AATATTTC GGCAGCGT </span></span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true"></a><span class="co">#&gt;       22       20       16       15       13       13        9        6 </span></span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true"></a><span class="co">#&gt; TAGGTCTA CGCGTTAT AATACCCT AACTTCCA GAGTGAGA GTGGGACG GGCGAATT AGTGGGGC </span></span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true"></a><span class="co">#&gt;        6        6        1        1        1        1        1        1 </span></span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true"></a><span class="co">#&gt; [1] FALSE</span></span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;min&quot;</span></span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true"></a><span class="kw">summary</span>(nnt)</span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true"></a><span class="co">#&gt;                   Length Class      Mode     </span></span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true"></a><span class="co">#&gt; tag_matrix          64   data.frame list     </span></span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true"></a><span class="co">#&gt; cell_type         5346   factor     numeric  </span></span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true"></a><span class="co">#&gt; niche_tags          64   -none-     numeric  </span></span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true"></a><span class="co">#&gt; niche_size          64   -none-     numeric  </span></span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true"></a><span class="co">#&gt; niche_celltypes     64   -none-     numeric  </span></span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true"></a><span class="co">#&gt; niche_interaction    3   data.frame list     </span></span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true"></a><span class="co">#&gt; code2celltype       26   -none-     character</span></span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true"></a><span class="co">#&gt; code2tag            64   -none-     character</span></span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true"></a><span class="co">#&gt; cell_barcode      5346   -none-     character</span></span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true"></a><span class="co">#&gt; set                257   -none-     list     </span></span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true"></a><span class="co">#&gt; set_size           257   -none-     numeric  </span></span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true"></a><span class="co">#&gt; setID              232   -none-     numeric  </span></span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true"></a><span class="co">#&gt; niche               64   -none-     list     </span></span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true"></a><span class="co">#&gt; set_interaction      2   data.frame list</span></span></code></pre></div>
+<p>This function returns a list containing connectome information for all FMUs, which mainly includes:</p>
+<p>1.tag_matrix: data.frame, CellTag expression matrix of all cells 2.cell_type: factor, cell type or state used for set defination 3.cell_tags: numeric, total expression counts of each CellTag 4.niche_size: integer, covered cell number of each CellTag 5.niche_celltypes: integer, covered cell types or cell states by each CellTag 6.niche_interaction: data.frame, overlapped cell numbers of FMU-FMU pairs 7.cell_barcode: character, code of each cell, celltagcode+celltypecode 8.set list: each element represent a CellTag expression matrix of each set 9.set_size: integer, covered cell number of each set 10.niche list: mean CellTag expression of covered cells of all covered set for each CellTag 11.set_interaction: data.frame, overlapped tag expression of set-set pairs 12.setID: integer, order of sets when make graph with graph_from_data_frame in igraph</p>
+<p>Visualization for connectome data encompass the following functions:</p>
+<ol style="list-style-type: decimal">
+<li>print_nichenetwork: set network - each vertex represents a set, and edges between vertices indicate shared CellTags between two sets</li>
+<li>print_nichetag: Bar plot - displays the cell number and cell types covered by each FMU</li>
+<li>print_clustertag: Density plot - shows the distribution of CellTag expression levels within each cell cluster</li>
+<li>tag_cancer_noncancer: Bar plot - comparatively displays the expression levels of each CellTag in cancer cells and stromal cells</li>
+<li>tag_cci: Bar plot - shows the distribution of sender and receiver cell counts corresponding to different CellTags</li>
+<li>settype: Bar plot - displays the cell types and quantities of sets within each FMU</li>
+<li>tag_cellsettype: Bar plot - shows the types and quantities of sets or cells covered by each CellTag</li>
+<li>print_nichenet: set network - each vertex represents an FMU, and edges between vertices indicate the presence of shared CellTags between two FMUs</li>
+</ol>
+<p>We run these functions for visualization:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="co">#draw set-set network</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="kw">print_nichenetwork</span>(nnt,<span class="dt">file=</span><span class="st">&quot;nichenetwork.pdf&quot;</span>,<span class="dt">vertex.label.cex=</span><span class="fl">0.1</span>,<span class="dt">vsize=</span><span class="dv">3</span>,<span class="dt">esize=</span><span class="dv">1</span>,<span class="dt">margin=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.3</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AGTAATCA&quot;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;TGCAGACA&quot;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AACACAAG&quot;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;TAAGAGTT&quot;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GCGATGAT&quot;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;CGTGCGGT&quot;</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AGGCTCCC&quot;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;CTGTTTGT&quot;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;CCAGCCGA&quot;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;CAGATCAT&quot;</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;TCCCGTAA&quot;</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GTCCGAGG&quot;</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;ACCGTCGG&quot;</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;CTGAGCGC&quot;</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;ATATGGAC&quot;</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;TTGTTACA&quot;</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GGTTAAAT&quot;</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GGAGACTC&quot;</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GAGTGTTG&quot;</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;ATTTTTTG&quot;</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AAGCAGGC&quot;</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;TGTGGCCC&quot;</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;ACTTTGAG&quot;</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;CCCGCGCG&quot;</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;TACGTGGC&quot;</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GTTAACGG&quot;</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;CAATTAGA&quot;</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;CCGGAGTC&quot;</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GATTTGTG&quot;</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;TAACCGAC&quot;</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GATGGTGG&quot;</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AGTCTTGA&quot;</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AACAGAGT&quot;</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;ATTGCACC&quot;</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GCCTAGGT&quot;</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AGTACGAA&quot;</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AAGCTGAA&quot;</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;TTTGGGAA&quot;</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GTGAGGCA&quot;</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;TGTAAGGT&quot;</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;CAACCGGT&quot;</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;TTGTAGTT&quot;</span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GGCCAGAC&quot;</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GAACATGT&quot;</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;TTACTGGA&quot;</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GCTGGATC&quot;</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;TCGCGGGT&quot;</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;TACAAAGA&quot;</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GGGCCGCC&quot;</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;TTTGGATG&quot;</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;CGAATCCA&quot;</span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;CTAGGTAA&quot;</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;CGGTGACA&quot;</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AGGAAGTC&quot;</span></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AATATTTC&quot;</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GGCAGCGT&quot;</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;TAGGTCTA&quot;</span></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;CGCGTTAT&quot;</span></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AATACCCT&quot;</span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AACTTCCA&quot;</span></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GAGTGAGA&quot;</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GTGGGACG&quot;</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;GGCGAATT&quot;</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AGTGGGGC&quot;</span></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true"></a><span class="co">#&gt; png </span></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true"></a><span class="co">#&gt;   2</span></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true"></a><span class="co">#draw quanlity control figures</span></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true"></a><span class="kw">print_nichetag</span>(nnt, <span class="dt">file =</span> <span class="st">&quot;nichetag.pdf&quot;</span>)</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true"></a><span class="co">#&gt; Saving 3 x 3 in image</span></span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true"></a><span class="kw">print_clustertag</span>(nnt, <span class="dt">file =</span> <span class="st">&quot;cluster.pdf&quot;</span>)</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AM early&quot;</span></span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;Tex&quot;</span></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;IM pN Syngr1hi&quot;</span></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AM early niche&quot;</span></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;Cancer Sox9&quot;</span></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;IM2 pN&quot;</span></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AM Cyc&quot;</span></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;Cancer Dor&quot;</span></span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;Mac Inf&quot;</span></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;B cell&quot;</span></span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;Mac niche&quot;</span></span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;Fibroblast&quot;</span></span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;IM2&quot;</span></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;migDC&quot;</span></span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;IM pN&quot;</span></span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;AM late niche&quot;</span></span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;Neutrophil&quot;</span></span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;IM pN Npyhi&quot;</span></span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;Endothelial cell&quot;</span></span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;Macrophage&quot;</span></span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;NK cell&quot;</span></span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;Cancer CycB&quot;</span></span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;cDC2&quot;</span></span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;Monocyte&quot;</span></span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;Epithelial cell&quot;</span></span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;Mast cell&quot;</span></span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true"></a><span class="co">#&gt; Warning: Removed 1 row containing non-finite outside the scale range</span></span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true"></a><span class="co">#&gt; (`stat_density()`).</span></span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true"></a><span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span></span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true"></a><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true"></a><span class="co">#&gt; (`geom_density()`).</span></span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true"></a><span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span></span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true"></a><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true"></a><span class="co">#&gt; (`geom_density()`).</span></span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true"></a><span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span></span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true"></a><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true"></a><span class="co">#&gt; (`geom_density()`).</span></span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true"></a><span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span></span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true"></a><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true"></a><span class="co">#&gt; (`geom_density()`).</span></span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true"></a><span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span></span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true"></a><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true"></a><span class="co">#&gt; (`geom_density()`).</span></span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true"></a><span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span></span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true"></a><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
+<span id="cb4-118"><a href="#cb4-118" aria-hidden="true"></a><span class="co">#&gt; (`geom_density()`).</span></span>
+<span id="cb4-119"><a href="#cb4-119" aria-hidden="true"></a><span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span></span>
+<span id="cb4-120"><a href="#cb4-120" aria-hidden="true"></a><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
+<span id="cb4-121"><a href="#cb4-121" aria-hidden="true"></a><span class="co">#&gt; (`geom_density()`).</span></span>
+<span id="cb4-122"><a href="#cb4-122" aria-hidden="true"></a><span class="co">#&gt; Warning: Groups with fewer than two data points have been dropped.</span></span>
+<span id="cb4-123"><a href="#cb4-123" aria-hidden="true"></a><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
+<span id="cb4-124"><a href="#cb4-124" aria-hidden="true"></a><span class="co">#&gt; (`geom_density()`).</span></span>
+<span id="cb4-125"><a href="#cb4-125" aria-hidden="true"></a><span class="kw">tag_cancer_noncancer</span>(nnt, <span class="dt">file =</span> <span class="st">&quot;celltype.pdf&quot;</span>)</span>
+<span id="cb4-126"><a href="#cb4-126" aria-hidden="true"></a><span class="co">#&gt; Using tag as id variables</span></span>
+<span id="cb4-127"><a href="#cb4-127" aria-hidden="true"></a><span class="kw">tag_cci</span>(nnt, <span class="dt">file =</span> <span class="st">&quot;cci.pdf&quot;</span>)</span>
+<span id="cb4-128"><a href="#cb4-128" aria-hidden="true"></a><span class="co">#&gt; Using tag as id variables</span></span>
+<span id="cb4-129"><a href="#cb4-129" aria-hidden="true"></a><span class="kw">settype</span>(nnt, <span class="dt">file=</span><span class="st">&quot;settype.pdf&quot;</span>)</span>
+<span id="cb4-130"><a href="#cb4-130" aria-hidden="true"></a><span class="kw">tag_cellsettype</span>(nnt, <span class="dt">file=</span><span class="st">&quot;tag2celltype_settype.pdf&quot;</span>)</span>
+<span id="cb4-131"><a href="#cb4-131" aria-hidden="true"></a><span class="co">#&gt; Using tag as id variables</span></span>
+<span id="cb4-132"><a href="#cb4-132" aria-hidden="true"></a><span class="co">#&gt; Using tag as id variables</span></span>
+<span id="cb4-133"><a href="#cb4-133" aria-hidden="true"></a><span class="co">#draw niche-niche network</span></span>
+<span id="cb4-134"><a href="#cb4-134" aria-hidden="true"></a><span class="kw">print_nichenet</span>(nnt,<span class="dt">file=</span><span class="st">&quot;niche2nichenetwork.pdf&quot;</span>,<span class="dt">vsize =</span> <span class="dv">10</span>)</span>
+<span id="cb4-135"><a href="#cb4-135" aria-hidden="true"></a><span class="co">#&gt; png </span></span>
+<span id="cb4-136"><a href="#cb4-136" aria-hidden="true"></a><span class="co">#&gt;   2</span></span></code></pre></div>
+<p>Export Data</p>
+<p>In addition to the visualization parts above, we can also extract from the connectome object: 1. the list of sets contained in each FMU 2. the list of cells contained in each set 3. the average expression matrix for each set</p>
+<p>The information can be written to local CSV files, which can be useful to further analyze the data in R:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="co">#sets and the cells it contains</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>set2cell=nnt<span class="op">$</span>set</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>set2cell.vec=<span class="kw">unlist</span>(<span class="kw">lapply</span>(<span class="kw">names</span>(set2cell),<span class="cf">function</span>(x){</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>  y=set2cell[[x]]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a>  res=<span class="kw">rep</span>(x,<span class="kw">nrow</span>(y))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a>  <span class="kw">names</span>(res)=<span class="kw">rownames</span>(y)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a>  res</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a>}))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a>set2cell.df=<span class="kw">data.frame</span>(<span class="dt">set_code=</span>set2cell.vec,<span class="dt">cell=</span><span class="kw">names</span>(set2cell.vec))</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a>set2cell.df<span class="op">$</span>set_ID=nnt<span class="op">$</span>setID[set2cell.df<span class="op">$</span>set_code]</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a><span class="kw">write.csv</span>(set2cell.df,<span class="dt">file =</span> <span class="st">&quot;set2cell.csv&quot;</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a><span class="co">#FMUs and the sets it contains</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a>niche2set=nnt<span class="op">$</span>niche</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a>niche2set.vec=<span class="kw">unlist</span>(<span class="kw">lapply</span>(<span class="kw">names</span>(niche2set),<span class="cf">function</span>(x){</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a>  res=<span class="kw">paste</span>(x,<span class="kw">names</span>(niche2set[[x]]),<span class="dt">sep=</span><span class="st">&quot;:&quot;</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true"></a>  res</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true"></a>}))</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true"></a>niche2set.df=<span class="kw">as.data.frame</span>(stringr<span class="op">::</span><span class="kw">str_split_fixed</span>(niche2set.vec,<span class="st">&quot;:&quot;</span>,<span class="dt">n=</span><span class="dv">2</span>))</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true"></a><span class="kw">colnames</span>(niche2set.df) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;niche&quot;</span>,<span class="st">&quot;set_code&quot;</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true"></a>niche2set.df<span class="op">$</span>set_ID=nnt<span class="op">$</span>setID[niche2set.df<span class="op">$</span>set_code]</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true"></a><span class="kw">write.csv</span>(niche2set.df,<span class="dt">file =</span> <span class="st">&quot;niche2set.csv&quot;</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true"></a><span class="co">#set expression matrix</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true"></a>setmatrix=<span class="kw">set_expr</span>(scObject,nnt,<span class="dt">seurat_layer=</span><span class="st">&quot;counts&quot;</span>)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true"></a><span class="co">#&gt; Warning in asMethod(object): sparse-&gt;dense coercion: allocating vector of size</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true"></a><span class="co">#&gt; 1.1 GiB</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true"></a><span class="kw">write.csv</span>(setmatrix,<span class="st">&quot;set_matrix.csv&quot;</span>)</span></code></pre></div>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+<p>Thank you for following this vignette, I hope you made it through the end without too much headache and that it was informative. If you encounter bugs, feel free to raise an issue on nichetagR’s <a href="https://github.com/woshijiaomu/nichetagR/issues">github</a>.</p>
+</div>
+<div id="information-about-the-r-session-when-this-vignette-was-built" class="section level1">
+<h1>Information about the R session when this vignette was built</h1>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="kw">sessionInfo</span>()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="co">#&gt; R version 4.5.0 (2025-04-11)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a><span class="co">#&gt; Running under: Ubuntu 22.04.5 LTS</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a><span class="co">#&gt; Matrix products: default</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a><span class="co">#&gt; locale:</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a><span class="co">#&gt;  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a><span class="co">#&gt;  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=C              </span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a><span class="co">#&gt;  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true"></a><span class="co">#&gt;  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true"></a><span class="co">#&gt;  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true"></a><span class="co">#&gt; [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true"></a><span class="co">#&gt; time zone: Asia/Shanghai</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true"></a><span class="co">#&gt; tzcode source: system (glibc)</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true"></a><span class="co">#&gt; attached base packages:</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true"></a><span class="co">#&gt; other attached packages:</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true"></a><span class="co">#&gt; [1] cowplot_1.1.3   nichetagR_0.1.0</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true"></a><span class="co">#&gt;  [1] dotCall64_1.2        stringdist_0.9.15    gtable_0.3.6        </span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true"></a><span class="co">#&gt;  [4] spam_2.11-1          xfun_0.52            bslib_0.9.0         </span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true"></a><span class="co">#&gt;  [7] ggplot2_4.0.1        lattice_0.22-7       vctrs_0.6.5         </span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true"></a><span class="co">#&gt; [10] tools_4.5.0          generics_0.1.3       parallel_4.5.0      </span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true"></a><span class="co">#&gt; [13] Polychrome_1.5.4     tibble_3.2.1         pkgconfig_2.0.3     </span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true"></a><span class="co">#&gt; [16] Matrix_1.7-3         RColorBrewer_1.1-3   S7_0.2.0            </span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true"></a><span class="co">#&gt; [19] scatterplot3d_0.3-44 lifecycle_1.0.4      compiler_4.5.0      </span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true"></a><span class="co">#&gt; [22] farver_2.1.2         stringr_1.5.1        fields_17.3         </span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true"></a><span class="co">#&gt; [25] textshaping_1.0.1    codetools_0.2-20     SeuratObject_5.1.0  </span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true"></a><span class="co">#&gt; [28] htmltools_0.5.8.1    maps_3.4.3           sass_0.4.10         </span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true"></a><span class="co">#&gt; [31] yaml_2.3.10          pillar_1.10.2        jquerylib_0.1.4     </span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true"></a><span class="co">#&gt; [34] cachem_1.1.0         viridis_0.6.5        parallelly_1.43.0   </span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true"></a><span class="co">#&gt; [37] tidyselect_1.2.1     zip_2.3.2            digest_0.6.37       </span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true"></a><span class="co">#&gt; [40] stringi_1.8.7        future_1.40.0        dplyr_1.1.4         </span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true"></a><span class="co">#&gt; [43] reshape2_1.4.4       listenv_0.9.1        labeling_0.4.3      </span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true"></a><span class="co">#&gt; [46] fastmap_1.2.0        grid_4.5.0           colorspace_2.1-1    </span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true"></a><span class="co">#&gt; [49] cli_3.6.5            magrittr_2.0.3       dichromat_2.0-0.1   </span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true"></a><span class="co">#&gt; [52] future.apply_1.11.3  withr_3.0.2          scales_1.4.0        </span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true"></a><span class="co">#&gt; [55] sp_2.2-0             rmarkdown_2.29       globals_0.17.0      </span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true"></a><span class="co">#&gt; [58] igraph_2.1.4         gridExtra_2.3        progressr_0.15.1    </span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true"></a><span class="co">#&gt; [61] ragg_1.4.0           openxlsx_4.2.8       evaluate_1.0.3      </span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true"></a><span class="co">#&gt; [64] knitr_1.50           viridisLite_0.4.2    rlang_1.1.6         </span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true"></a><span class="co">#&gt; [67] Rcpp_1.1.0           glue_1.8.0           jsonlite_2.0.0      </span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true"></a><span class="co">#&gt; [70] R6_2.6.1             plyr_1.8.9           systemfonts_1.3.1</span></span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
