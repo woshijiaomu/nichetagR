@@ -5,7 +5,7 @@
 #' @return    dataframe, removed uncorrected tag
 #' @importFrom stringdist stringdist
 #' @noRd
-quality_control_v1<-function(tag_expression){
+quality_control<-function(tag_expression){
   tag_expression=tag_expression[,order(apply(tag_expression,2,sum),decreasing = T)]
   #library(stringdist)
   cbn=combn(colnames(tag_expression),2)
@@ -16,40 +16,6 @@ quality_control_v1<-function(tag_expression){
   tag_expression=tag_expression[,!(colnames(tag_expression) %in% similar[2,])]
   tag_expression=tag_expression[,order(apply(tag_expression,2,sum),decreasing = T)]
   print(apply(tag_expression,2,sum))
-  tag_expression
-}
-
-#' Remove closely related CellTags and CellTags with no resource cells
-#'
-#' @param tag_expression    dataframe, input tag expression matrix in which cells are rownames and tag expression are colnames
-#' @param highconfidence    TorF, if or not to distinguish high confident tag-sender
-#' @param send_cutoff1    int, count cutoff for primary celltag asignment
-#' @param send_cutoff2    numeric, percentage cutoff for primary celltag asignment
-#' @return    dataframe, removed uncorrected tag
-#' @importFrom stringdist stringdist
-#' @noRd
-quality_control<-function(tag_expression,highconfidence=TRUE,send_cutoff1=10,send_cutoff2=0.8){
-  print(dim(tag_expression))
-  tag_expression=tag_expression[,order(apply(tag_expression,2,sum),decreasing = T)]
-  #library(stringdist)
-  cbn=combn(colnames(tag_expression),2)
-  similar=cbn[,apply(cbn,2,function(x){stringdist(x[1], x[2], method = "lv")})<=2]
-  #tag_sum=apply(tag_expression,2,sum)
-  #print(tag_sum[similar[1,]])
-  #print(tag_sum[similar[2,]])
-  tag_expression=tag_expression[,!(colnames(tag_expression) %in% similar[2,])]
-  tag_expression=tag_expression[,order(apply(tag_expression,2,sum),decreasing = T)]
-  hpos=c()
-  if(highconfidence==TRUE){
-    for(tagposition in 1:ncol(tag_expression)){
-      s=apply(tag_expression,1,function(x){
-        x[tagposition]>=send_cutoff1 & x[tagposition]/sum(x)>=send_cutoff2
-      })
-      if(sum(s)>0){hpos=c(hpos,tagposition)}
-    }
-    #print(hpos)
-    tag_expression=tag_expression[,hpos]
-  }
   tag_expression
 }
 
