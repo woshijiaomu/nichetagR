@@ -109,7 +109,7 @@ print_nichenetwork(nnt,file="Set_Network_Shared_CellTags.pdf",vertex.label.cex=0
 #graph quanlity control figures
 print_nichetag(nnt, file = "Niche_CellNumber_CellType.pdf")
 print_clustertag(nnt, file = "Cluster_CellTag_Expression_Density.pdf")
-tag_cancer_noncancer(nnt, file = "CellTag_Expression_Cancer_vs_Stroma.pdf")
+tag_cancer_noncancer(nnt, file = "CellTag_Expression_Cancer_vs_Noncancer.pdf")
 tag_cci(nnt, file = "CellTag_Sender_Receiver_Distribution.pdf")
 settype(nnt, file="Niche_Set_CellType_Composition.pdf")
 tag_cellsettype(nnt, file="CellTag_Coverage_Set_Cell.pdf")
