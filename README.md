@@ -71,12 +71,12 @@ Here is a description of the basic arguments it requires:
 
 We have everything we need in our input object to fill these arguments:
 ```r
-#compute connectome
+#compute network
 nnt=Dnichenetwork(scObject,groupby="cell_clusters")
 summary(nnt)
 ```
 
-This function returns a list containing connectome information for all niches or FMUs, which mainly includes:
+This function returns a list containing network information for all niches or FMUs, which mainly includes:
 
 1. tag_matrix: data.frame, CellTag expression matrix of all cells
 2. cell_type: factor, cell type or state used for set definition
@@ -91,7 +91,7 @@ This function returns a list containing connectome information for all niches or
 11. set_interaction: data.frame, overlapped tag expression of set-set pairs
 12. setID: integer, order of sets when make graph with graph_from_data_frame in igraph
 
-Visualization for connectome data encompass the following functions:
+Visualization for network data encompass the following functions:
 
 1. print_nichenetwork: set network - each vertex represents a set, and edges between vertices indicate shared CellTags between two sets
 2. print_nichetag: Bar plot - displays the cell number and cell types covered by each FMU
@@ -119,7 +119,7 @@ print_nichenet(nnt,file="Niche_Network_Shared_CellTags.pdf",vsize = 10)
 
 ## Export Data
 
-In addition to the visualization parts above, we can also extract from the connectome object: 
+In addition to the visualization parts above, we can also extract from the network object: 
 1. the list of sets contained in each FMU
 2. the list of cells contained in each set
 3. the average expression matrix for each set
